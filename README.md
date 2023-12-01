@@ -17,8 +17,18 @@ https://book.getfoundry.sh/
 
 ### Build
 
+
 ```shell
 $ forge build
+$ cp .env.example .env  ## fill up env on the file
+```
+
+
+### HomeWork
+
+#### HW12
+```shell
+$ forge script script/deploy.s.sol
 ```
 
 ### Test
