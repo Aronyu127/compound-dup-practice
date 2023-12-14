@@ -13,12 +13,12 @@ import "../contracts/InterestRateModel.sol";
 
 contract Deploy is Script {
     bool deployOnChain = vm.envBool("DEPLOY_ON_CHAIN");
-    address MyTokenAddress;
-    address MyToken2Address;
+    address TokenAAddress;
+    address TokenBAddress;
     address adminAddress;
     address oracleAddress;
-    address payable cErc20DelegatorAddress;
-    address payable cErc20Delegator2Address;
+    address payable cTokenAAddress;
+    address payable cTokenBAddress;
     address unitrollerAddress;
     function setUp() public virtual {
         uint256 forkId = vm.createFork(vm.envString("MAINNET_RPC_URL"));
@@ -61,7 +61,7 @@ contract Deploy is Script {
         );
         address payable admin = payable(msg.sender);
 
-        CErc20Delegator cErc20Delegator = new CErc20Delegator(
+        CErc20Delegator cTokenA = new CErc20Delegator(
             address(token),
             comptrollerInterface,
             interestRateModelInterface,
@@ -73,7 +73,7 @@ contract Deploy is Script {
             address(cErc20Delegate),
             ""
         );
-        CErc20Delegator cErc20Delegator2 = new CErc20Delegator(
+        CErc20Delegator cTokenB = new CErc20Delegator(
             address(token2),
             comptrollerInterface,
             interestRateModelInterface,
@@ -85,16 +85,16 @@ contract Deploy is Script {
             address(cErc20Delegate),
             ""
         );
-        priceOracle.setUnderlyingPrice(CToken(address(cErc20Delegator)), 1 * 1e18);
-        priceOracle.setUnderlyingPrice(CToken(address(cErc20Delegator2)), 100 * 1e18);
-        comptroller_warp_unitorller._supportMarket(CToken(address(cErc20Delegator)));
+        priceOracle.setUnderlyingPrice(CToken(address(cTokenA)), 1 * 1e18);
+        priceOracle.setUnderlyingPrice(CToken(address(cTokenB)), 100 * 1e18);
+        comptroller_warp_unitorller._supportMarket(CToken(address(cTokenA)));
         comptroller_warp_unitorller._setCloseFactor(5e17);
-        comptroller_warp_unitorller._supportMarket(CToken(address(cErc20Delegator2)));
-        comptroller_warp_unitorller._setCollateralFactor(CToken(address(cErc20Delegator2)), 5e17);
-        cErc20DelegatorAddress = payable(address(cErc20Delegator));
-        cErc20Delegator2Address = payable(address(cErc20Delegator2));
-        MyTokenAddress = address(token);
-        MyToken2Address = address(token2);
+        comptroller_warp_unitorller._supportMarket(CToken(address(cTokenB)));
+        comptroller_warp_unitorller._setCollateralFactor(CToken(address(cTokenB)), 5e17);
+        cTokenAAddress = payable(address(cTokenA));
+        cTokenBAddress = payable(address(cTokenB));
+        TokenAAddress = address(token);
+        TokenBAddress = address(token2);
         if (deployOnChain) {
           vm.stopBroadcast();
         }
