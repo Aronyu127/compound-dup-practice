@@ -31,6 +31,11 @@ $ cp .env.example .env  ## fill up env on the file
 $ forge script script/deploy.s.sol
 ```
 
+#### HW13
+```shell
+$ forge test --match-contract CompoundTest -vv
+```
+
 ### Test
 
 ```shell
